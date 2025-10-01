@@ -27,30 +27,12 @@ export default function MaintenanceLogTable({
       loading={isLoading}
       columns={[
         { field: "tag", headerName: "Equipment" },
-        {
-          field: "type",
-          headerName: "Type",
-        },
-        {
-          field: "latest_maintenance_date",
-          headerName: "Date",
-        },
-        {
-          field: "performed_by",
-          headerName: "Technician",
-        },
-        {
-          field: "status",
-          headerName: "Status",
-        },
-        {
-          field: "severity",
-          headerName: "Severity",
-        },
-        {
-          field: "tags",
-          headerName: "Tags",
-        },
+        { field: "type", headerName: "Type" },
+        { field: "latest_maintenance_date", headerName: "Date" },
+        { field: "performed_by", headerName: "Technician" },
+        { field: "status", headerName: "Status" },
+        { field: "severity", headerName: "Severity" },
+        { field: "tags", headerName: "Tags" },
       ]}
       initialState={{
         pagination: {
