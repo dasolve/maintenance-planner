@@ -1,0 +1,331 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/dasolve/data-model-ddl/refs/heads/main/packages/schema/schemas/data-model-v1.schema.json
+version: "1"
+name: maintenance_log
+description: Data model for managing maintenance logs, equipment, locations, and related entities.
+dialect: postgres
+tables:
+  - name: equipments
+    columns:
+      - name: id
+        type: uuid
+        description: Unique identifier for the equipment. It may be auto generated.
+        primary_key: true
+        default: gen_random_uuid()
+      - name: name
+        type: text
+        description: Name of the equipment.
+        nullable: false
+      - name: equipment_type_id
+        type: uuid
+        description: Identifier of the equipment type.
+        nullable: false
+        foreign_key:
+          table: equipment_types
+          column: id
+      - name: location_id
+        type: uuid
+        description: Location of the equipment.
+        nullable: false
+        foreign_key:
+          table: locations
+          column: id
+      - name: tag
+        type: text
+        description: Tag or identifier for the equipment.
+        nullable: false
+      - name: created_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was created.
+        nullable: false
+        default: now()
+      - name: updated_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was last updated.
+        nullable: false
+        default: now()
+      - name: created_by
+        type: text
+        description: Identifier of the user who created the record.
+        nullable: false
+      - name: updated_by
+        type: text
+        description: Identifier of the user who last updated the record.
+        nullable: false
+      - name: enabled
+        type: integer
+        description: Indicates if the record is active or soft-deleted.
+        nullable: false
+
+  - name: locations
+    columns:
+      - name: id
+        type: uuid
+        description: Unique identifier for the location. It may be auto generated.
+        primary_key: true
+        default: gen_random_uuid()
+      - name: name
+        type: text
+        description: Name of the location.
+        nullable: false
+      - name: building
+        type: text
+        description: Building of the location.
+        nullable: false
+      - name: created_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was created.
+        nullable: false
+        default: now()
+      - name: updated_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was last updated.
+        nullable: false
+        default: now()
+      - name: created_by
+        type: text
+        description: Identifier of the user who created the record.
+        nullable: false
+      - name: updated_by
+        type: text
+        description: Identifier of the user who last updated the record.
+        nullable: false
+      - name: enabled
+        type: integer
+        description: Indicates if the record is active or soft-deleted.
+        nullable: false
+
+  - name: equipment_types
+    columns:
+      - name: id
+        type: uuid
+        description: Unique identifier for the equipment type. It may be auto generated.
+        primary_key: true
+        default: gen_random_uuid()
+      - name: name
+        type: text
+        description: Name of the equipment type.
+        nullable: false
+      - name: created_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was created.
+        nullable: false
+        default: now()
+      - name: updated_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was last updated.
+        nullable: false
+        default: now()
+      - name: created_by
+        type: text
+        description: Identifier of the user who created the record.
+        nullable: false
+      - name: updated_by
+        type: text
+        description: Identifier of the user who last updated the record.
+        nullable: false
+      - name: enabled
+        type: integer
+        description: Indicates if the record is active or soft-deleted.
+        nullable: false
+
+  - name: maintenance_logs
+    columns:
+      - name: id
+        type: uuid
+        description: Unique identifier for the maintenance log. It may be auto generated.
+        primary_key: true
+        default: gen_random_uuid()
+      - name: equipment_id
+        type: uuid
+        description: Identifier of the equipment associated with the maintenance log.
+        nullable: false
+        foreign_key:
+          table: equipments
+          column: id
+      - name: maintenance_date
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Date when the maintenance was performed.
+        nullable: false
+      - name: type
+        type: text
+        description: Type of maintenance performed.
+        nullable: false
+      - name: description
+        type: text
+        description: Description of the maintenance work done.
+        nullable: false
+      - name: severity
+        type: text
+        description: Severity level of the maintenance issue (e.g., low, medium, high).
+        nullable: false
+      - name: performed_by
+        type: text
+        description: Id of the user who performed the maintenance.
+        nullable: false
+      - name: tags
+        type: text
+        description: Array of tags associated with the maintenance log.
+        nullable: true
+      - name: status
+        type: text
+        description: Status of the maintenance (e.g., completed, pending).
+        nullable: false
+      - name: next_maintenance_date
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Date when the next maintenance is scheduled.
+        nullable: true
+      - name: created_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was created.
+        nullable: false
+        default: now()
+      - name: updated_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was last updated.
+        nullable: false
+        default: now()
+      - name: created_by
+        type: text
+        description: Identifier of the user who created the record.
+        nullable: false
+      - name: updated_by
+        type: text
+        description: Identifier of the user who last updated the record.
+        nullable: false
+      - name: enabled
+        type: integer
+        description: Indicates if the record is active or soft-deleted.
+        nullable: false
+
+  - name: attachments
+    columns:
+      - name: id
+        type: uuid
+        description: Unique identifier for the attachment. It may be auto generated.
+        primary_key: true
+        default: gen_random_uuid()
+      - name: entity
+        type: text
+        description: The entity type the attachment is associated with (e.g., MaintenanceLog, Equipment, Comment).
+        nullable: false
+      - name: entity_id
+        type: text
+        description: Identifier of the associated entity.
+        nullable: false
+      - name: url
+        type: text
+        description: URL of the attachment.
+        nullable: false
+      - name: name
+        type: text
+        description: Name of the attachment.
+        nullable: false
+      - name: description
+        type: text
+        description: Description of the attachment.
+        nullable: true
+      - name: created_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was created.
+        nullable: false
+        default: now()
+      - name: updated_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was last updated.
+        nullable: false
+        default: now()
+      - name: created_by
+        type: text
+        description: Identifier of the user who created the record.
+        nullable: false
+      - name: updated_by
+        type: text
+        description: Identifier of the user who last updated the record.
+        nullable: false
+      - name: enabled
+        type: integer
+        description: Indicates if the record is active or soft-deleted.
+        nullable: false
+
+  - name: comments
+    columns:
+      - name: id
+        type: uuid
+        description: Unique identifier for the comment. It may be auto generated.
+        primary_key: true
+        default: gen_random_uuid()
+      - name: equipment_id
+        type: uuid
+        description: Identifier of the equipment associated with the comment.
+        nullable: false
+        foreign_key:
+          table: equipments
+          column: id
+      - name: comment
+        type: text
+        description: Content of the comment.
+        nullable: false
+      - name: created_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was created.
+        nullable: false
+        default: now()
+      - name: updated_at
+        type:
+          name: timestamp
+          options:
+            withTimeZone: true
+        description: Timestamp when the record was last updated.
+        nullable: false
+        default: now()
+      - name: created_by
+        type: text
+        description: Identifier of the user who created the record.
+        nullable: false
+      - name: updated_by
+        type: text
+        description: Identifier of the user who last updated the record.
+        nullable: false
+      - name: enabled
+        type: integer
+        description: Indicates if the record is active or soft-deleted.
+        nullable: false
